@@ -8,7 +8,7 @@ import { CreateUserPrismaConnector } from '../../adapter/connectors/create-user-
 import { UserController } from '../controllers/user.controller';
 import { FindUserFeature } from '../../core/features/find-user.feature';
 import { FindUserPrismaConnector } from '../../adapter/connectors/find-user-prisma.connector';
-
+import { IsValidEmailConstraint } from '../validations/valid-email.validation';
 
 @Module(
   generateModule({
@@ -19,7 +19,8 @@ import { FindUserPrismaConnector } from '../../adapter/connectors/find-user-pris
     providers: [
       provider(CreateUserFeature, CreateUserPrismaConnector),
       provider(FindUserFeature, FindUserPrismaConnector),
-      UserService
+      UserService,
+      IsValidEmailConstraint
     ],
     controllers: [UserController]
   }),

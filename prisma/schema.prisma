@@ -14,8 +14,22 @@ model User {
   id Int @id @default(autoincrement())
 
   name String
-  email String @unique
+  email String @unique()
   password String
 
+  rentedMovies RentMovies[] @relation(name: "UserRentedMovies")
+
   @@map("users")
+}
+
+model RentMovies {
+  id Int @id @default(autoincrement())
+
+  externalId Int @db.Integer()
+  rentalExpiration DateTime @db.Timestamp()
+
+  userId Int @map("user_id")
+  users User @relation(fields: [userId], name: "UserRentedMovies", references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("rent_movies")
 }

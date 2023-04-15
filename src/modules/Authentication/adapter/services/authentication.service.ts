@@ -19,8 +19,12 @@ export class AuthenticationService {
     ){}
 
     async signIn({ email, password }: SignInDto){
-
         const user = await this.findUserByEmail.perform({ email });
+
+        if(!user){
+            throw new Error('User not found')
+        }
+
         const isPasswordValid = await this.validatePassword.perform(password, user.password);
 
         if(!isPasswordValid){

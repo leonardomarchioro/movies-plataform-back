@@ -4,6 +4,8 @@ import {
     Injectable,
   } from '@nestjs/common'
 import { AuthenticationService } from '../../adapter/services/authentication.service'
+import { MissingAuthorizationTokenException } from '../../core/exceptions/missing-authorization-token.exception'
+import { InvalidTokenException } from '../../core/exceptions/invalid-token.exception'
   
   @Injectable()
   export class AuthorizationGuard implements CanActivate {  
@@ -17,15 +19,22 @@ import { AuthenticationService } from '../../adapter/services/authentication.ser
   
       const { authorization } = request.headers
       if(!authorization){
-        throw new Error('missing authorization token')
+        throw new MissingAuthorizationTokenException();
       }
       const [, token] = authorization.split(' ')
 
+      const isValidToken = await this.service.checkToken(token)
+
       const { userId } = await this.service.decodedToken(token)
+
+      const isExistsUser = await this.service.validateUserExists(userId)
+      if(!isExistsUser){
+        throw new InvalidTokenException();
+      }
 
       request.userId = userId
   
-      return this.service.checkToken(token)
+      return isValidToken
     }
   }
   

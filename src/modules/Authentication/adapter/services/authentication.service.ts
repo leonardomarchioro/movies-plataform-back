@@ -7,11 +7,12 @@ import { TokenGeneratorFeature } from "../../core/features/token-generator.featu
 import { CheckUserTokenFeature } from "../../core/features/check-user-token.feature";
 import { DecodedUserTokenModel } from "../../core/models/decoded-user-token.model";
 import { DecodedUserTokenFeature } from "../../core/features/decode-user-token.feature";
+import { CreatedUserModel } from "src/modules/Users/core/models/created-user.model";
 
 @Injectable()
 export class AuthenticationService {
     constructor(
-        private readonly findUserByEmail: FindUserDataFeature,
+        private readonly findUserByParam: FindUserDataFeature,
         private readonly validatePassword: EncryptedDataCompareFeature,
         private readonly tokenJWTGenerator: TokenGeneratorFeature,
         private readonly checkUserToken: CheckUserTokenFeature,
@@ -19,7 +20,7 @@ export class AuthenticationService {
     ){}
 
     async signIn({ email, password }: SignInDto){
-        const user = await this.findUserByEmail.perform({ email });
+        const user = await this.findUserByParam.perform({ email });
 
         if(!user){
             throw new Error('User not found')
@@ -41,5 +42,9 @@ export class AuthenticationService {
 
     async decodedToken(token: string): Promise<DecodedUserTokenModel> {
         return this.decodeUserTokenFeature.perform(token);
+    }
+
+    async validateUserExists(id: number): Promise<CreatedUserModel> {
+        return this.findUserByParam.perform({ id })
     }
 }

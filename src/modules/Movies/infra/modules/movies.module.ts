@@ -9,6 +9,10 @@ import { RentMoviesPrismaConnector } from "../../adapter/connector/rent-movies-p
 import { AuthModule } from "../../../Authentication/infra/modules/authentication.module";
 import { FindRentMoviesFeature } from "../../core/feature/find-rent-movies.feature";
 import { FindRentMoviesApiConnector } from "../../adapter/connector/find-rent-movies-api.connector";
+import { FinishRentMoviesFeature } from "../../core/feature/finish-rent-movies.feature";
+import { FinishRentMoviesPrismaConnector } from "../../adapter/connector/finish-rent-movies-prisma.connector";
+import { FindDuplicateRentMoviesPrismaConnector } from "../../adapter/connector/find-duplicate-rent-movies-prisma.connector";
+import { FindDuplicateRentMoviesFeature } from "../../core/feature/find-duplicate-rent-movies.feature";
 
 @Module(
     generateModule({
@@ -20,7 +24,9 @@ import { FindRentMoviesApiConnector } from "../../adapter/connector/find-rent-mo
         providers: [
             provider(RentMoviesFeature, RentMoviesPrismaConnector),
             provider(FindRentMoviesFeature, FindRentMoviesApiConnector),
-            MovieService
+            provider(FinishRentMoviesFeature, FinishRentMoviesPrismaConnector),
+            provider(FindDuplicateRentMoviesFeature, FindDuplicateRentMoviesPrismaConnector),
+            MovieService, 
         ],
         controllers: [MovieController]
     })

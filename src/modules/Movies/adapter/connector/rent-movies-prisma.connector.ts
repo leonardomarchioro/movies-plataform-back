@@ -19,10 +19,10 @@ export class RentMoviesPrismaConnector implements RentMoviesFeature {
             userId
         }))
 
-        const movies = await this.prisma.rentMovies.createMany({
+        await this.prisma.rentMovies.createMany({
             data
         })
-        console.log({movies})
+        
         return this.prisma.rentMovies.findMany({
             where: { userId }
         })

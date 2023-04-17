@@ -8,6 +8,7 @@ import { CheckUserTokenFeature } from "../../core/features/check-user-token.feat
 import { DecodedUserTokenModel } from "../../core/models/decoded-user-token.model";
 import { DecodedUserTokenFeature } from "../../core/features/decode-user-token.feature";
 import { CreatedUserModel } from "src/modules/Users/core/models/created-user.model";
+import { WrongSigninException } from "../../core/exceptions/wrong-signin-exception";
 
 @Injectable()
 export class AuthenticationService {
@@ -23,13 +24,13 @@ export class AuthenticationService {
         const user = await this.findUserByParam.perform({ email });
 
         if(!user){
-            throw new Error('User not found')
+            throw new WrongSigninException()
         }
 
         const isPasswordValid = await this.validatePassword.perform(password, user.password);
 
         if(!isPasswordValid){
-            throw new Error('Senha invalida')
+            throw new WrongSigninException()
         }
 
         const tokenData = this.tokenJWTGenerator.perform(user.id);

@@ -10,6 +10,9 @@ async function bootstrap() {
   config();
 
   const app = await NestFactory.create(AppModule);
+
+  app.enableCors();
+
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
   const port = process.env.PORT || 3000

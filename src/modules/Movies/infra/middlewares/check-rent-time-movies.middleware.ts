@@ -5,7 +5,7 @@ import { DuplicateRentMovieException } from "../../core/exceptions/duplicate-ren
 
 
 @Injectable()
-export class CheckRentTimeMoviesMiddleware implements NestMiddleware {
+export class CheckDuplicateRentMoviesMiddleware implements NestMiddleware {
   constructor(private readonly findDuplicateRentMoviesFeature: FindDuplicateRentMoviesFeature) {}
 
   async use(req: Request, res: Response, next: NextFunction) {

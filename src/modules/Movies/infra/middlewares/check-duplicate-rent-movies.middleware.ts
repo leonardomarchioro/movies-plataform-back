@@ -4,7 +4,7 @@ import { FinishRentMoviesFeature } from "../../core/feature/finish-rent-movies.f
 
 
 @Injectable()
-export class CheckDuplicateRentMoviesMiddleware implements NestMiddleware {
+export class CheckRentTimeMoviesMiddleware implements NestMiddleware {
   constructor(private readonly finishRentMoviesFeature: FinishRentMoviesFeature) {}
 
   async use(req: Request, res: Response, next: NextFunction) {

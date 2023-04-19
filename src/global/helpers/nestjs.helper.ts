@@ -1,4 +1,4 @@
-import { DynamicModule, ForwardReference, Provider, Type } from '@nestjs/common'
+import { DynamicModule, ForwardReference, InjectionToken, Provider, Type } from '@nestjs/common'
 
 interface IModule {
     providers?: Provider<any>[];
@@ -12,6 +12,16 @@ interface IModule {
       )[]
 }
 
+export function provider<T, K extends T>(
+    abstraction: Type<T> | InjectionToken,
+    implementationClass: Type<K>,
+  ): Provider<T> {
+    return {
+      provide: abstraction,
+      useClass: implementationClass,
+    }
+  }
+  
 
 export function generateModule({ controllers, imports, providers }: IModule){
 

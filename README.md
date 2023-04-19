@@ -1,73 +1,96 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Movies API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Visão Geral
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Este serviço é responsável por duas principais funcionalidades: a criação e autenticação de usuários, e o gerenciamento do aluguel de filmes por esses usuários.
 
-## Description
+## Estruturas principais
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [Node.Js](https://nodejs.org/en)
+- [Nest.Js](https://nestjs.com/)
+- [Express](https://expressjs.com/pt-br/)
+- [Prisma](https://www.prisma.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Yarn](https://yarnpkg.com/)
 
-## Installation
+### Iniciando o serviço
 
-```bash
-$ yarn install
+Antes de iniciar os serviços, certifique-se de que estão instalados na sua maquina o **Docker, Node.Js, Nest.Js, e o yarn**
+
+1. Configurando variáveis:
+   > copie o arquivo .env.example para o arquivo .env, certifique-se que todas as variáveis possuam valores válidos.
+
+```
+cp .env.example .env
 ```
 
-## Running the app
+2. Iniciar container Docker:
 
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+```shell
+docker-compose up -d
 ```
 
-## Test
+> Esse comando irá rodar todas as instancias docker descritas no docker-compose
+> (Opcional visualizar logs)
 
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```shell
+docker-compose logs  -f  service  name
 ```
 
-## Support
+3. Instalar Dependências:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```shell
+yarn install
+```
 
-## Stay in touch
+4. Rodando Migrações:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```shell
+yarn prisma migrate dev
+```
 
-## License
+5. Rodando o Serviço:
 
-Nest is [MIT licensed](LICENSE).
+```shell
+yarn dev
+```
+
+## Arquitetura
+
+A arquitetura limpa tem como objetivo simplificar o código para facilitar sua manutenção, extensão e modificação. Isso é feito através da divisão da estrutura do código em camadas, onde cada camada tem responsabilidades mutuamente dependentes para fazer a aplicação funcionar. A arquitetura em camadas também impõe um controle nas dependências das classes, permitindo que uma classe se comunique apenas com as classes de níveis adjacentes, impedindo que uma classe de regra de negócio dependa diretamente de uma funcionalidade de terceiros.
+
+## As Camadas:
+
+### A Camada Core:
+
+A camada core ou main é a principal do sistema, nele é contido todas as declarações de alto nível, todos os modelos e exceções do nosso serviço.
+
+Formada por:
+
+1. Features:
+   > São nossas abstrações de alto nível geralmente interfaces ou classes abstratas com métodos que representam as funcionalidades.
+2. Models
+3. Exceptions
+
+### A Camada Adapter:
+
+A camada de adaptação é principalmente responsável por ligar a camada central core com a camada de infraestrutura, nessa camada acontece a aplicação do padrão adapter e também ocorre o tratamento de exceções.
+
+Formada por:
+
+1. Connectors
+2. Services:
+   > Representam a conexão entre a camada de infra ( geralmente controllers ) e a camada de negocio ( geralmente Features ).
+
+### A Camada Infra:
+
+A camada mais "livre" da arquitetura, essa parte é direcionada a implementação de classes que são utilizadas pela regra de negocio.
+
+Formada por:
+
+1. Controllers
+2. Middlewares
+3. Validations
+4. Modules
+5. Guardas de Rotas
+6. Data Transfer Objects (DTOS)
